@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#d946ef" />
+  <meta name="color-scheme" content="light" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="成长工作台" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <title>求职生活成长工作台</title>
+  <style>
+    :root {
+  --color-primary: #18181b;
+  --color-accent: #d946ef;
+  --color-accent-soft: #fdf2f8;
+  --color-accent-line: #f5d0fe;
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-warning: #d97706;
+  --color-bg-page: #fff7fb;
+  --color-bg-card: #ffffff;
+  --color-bg-subtle: #fafafa;
+  --color-text-primary: #09090b;
+  --color-text-body: #3f3f46;
+  --color-text-secondary: #71717a;
+  --color-text-muted: #8b5f7f;
+  --color-border: #eadde8;
+  --color-divider: #f4e8f2;
+  --shadow-sm: 0 1px 2px rgba(82, 23, 74, 0.05);
+  --shadow-md: 0 8px 24px rgba(82, 23, 74, 0.08);
+  --radius: 8px;
+  --tap: 44px;
+  --text-display: 28px;
+  --text-h1: 22px;
+  --text-h2: 16px;
+  --text-body: 14px;
+  --text-small: 12px;
+}
+
+* { box-sizing: border-box; }
+html { min-height: 100%; background: var(--color-bg-page); }
+body {
+  min-height: 100%; margin: 0;
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  font-size: var(--text-body); color: var(--color-text-body);
+  background: var(--color-bg-page); -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font: inherit; }
+button { min-height: var(--tap); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible {
+  outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 6px;
+}
+button:active { transform: scale(0.98); }
+
+.app-shell { display: flex; min-height: 100vh; overflow: hidden; }
+.sidebar {
+  width: 244px; flex-shrink: 0; min-height: 100vh; padding: 16px 12px;
+  background: rgba(255,255,255,0.88); border-right: 1px solid var(--color-border);
+  display: flex; flex-direction: column; gap: 14px; backdrop-filter: blur(12px);
+}
+.brand-block { display: flex; align-items: center; gap: 12px; padding: 8px 8px 16px; border-bottom: 1px solid var(--color-divider); }
+.brand-mark { width: 38px; height: 38px; display:grid; place-items:center; border-radius: 10px; background: var(--color-primary); color:#fff; font-weight:700; }
+.brand-title { font-size: 15px; font-weight: 700; color: var(--color-text-primary); }
+.brand-subtitle { margin-top: 2px; font-size: 12px; color: var(--color-text-secondary); }
+.nav-list { display: flex; flex-direction: column; gap: 4px; flex: 1; overflow-y: auto; }
+.nav-item {
+  width: 100%; min-height: 44px; border: 0; background: transparent; color: var(--color-text-body);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 9px 10px; border-radius: 8px; cursor: pointer; text-align: left;
+  transition: background 120ms, color 120ms;
+}
+.nav-item:hover { background: #f7edf5; color: var(--color-text-primary); }
+.nav-item.active { background: var(--color-accent-soft); color: #a21caf; font-weight: 600; }
+.nav-count { font-size: 11px; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+.sidebar-footer { display: grid; gap: 8px; padding-top: 12px; border-top: 1px solid var(--color-divider); }
+
+.main-panel { flex: 1; min-width: 0; max-height: 100vh; overflow-y: auto; }
+.topbar {
+  position: sticky; top: 0; z-index: 20; min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 16px 24px; background: rgba(255,247,251,0.92); border-bottom: 1px solid var(--color-border); backdrop-filter: blur(14px);
+}
+.eyebrow { margin: 0 0 4px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-muted); }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: 0; font-size: var(--text-h1); line-height: 1.2; color: var(--color-text-primary); }
+h2 { font-size: 18px; color: var(--color-text-primary); margin-bottom: 6px; }
+h3 { font-size: var(--text-h2); color: var(--color-text-primary); margin-bottom: 8px; }
+.topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+.primary-btn, .secondary-btn, .ghost-btn, .icon-button {
+  border-radius: 8px; border: 1px solid var(--color-border); cursor: pointer; transition: background 120ms, color 120ms, border-color 120ms, transform 80ms;
+}
+.primary-btn { background: var(--color-primary); color: #fff; border-color: var(--color-primary); padding: 8px 15px; font-weight: 600; }
+.primary-btn:hover { background: #2d2d30; }
+.secondary-btn { background: #fff; color: var(--color-text-primary); padding: 8px 13px; }
+.secondary-btn:hover, .ghost-btn:hover, .icon-button:hover { background: #f7edf5; border-color: #e9b9df; }
+.ghost-btn { background: transparent; color: var(--color-text-body); padding: 8px 12px; }
+.full { width: 100%; display: inline-flex; align-items: center; justify-content: center; text-align:center; }
+.file-label { min-height: 44px; }
+.icon-button { background: #fff; color: var(--color-text-body); padding: 8px 12px; }
+#menuBtn { display: none; }
+
+.status-strip { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; padding: 18px 24px 0; }
+.kpi-card { background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow-sm); }
+.kpi-label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 8px; }
+.kpi-value { font-size: 28px; line-height: 1; font-weight: 750; color: var(--color-text-primary); font-variant-numeric: tabular-nums; }
+.kpi-note { margin-top: 8px; font-size: 12px; color: var(--color-text-secondary); }
+
+.content-view { padding: 18px 24px 32px; }
+.panel-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr); gap: 16px; align-items: start; }
+.card { background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow-sm); }
+.card + .card { margin-top: 14px; }
+.card-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom: 14px; }
+.card-copy { margin-bottom: 0; color: var(--color-text-secondary); line-height: 1.7; }
+.actions-row { display:flex; flex-wrap: wrap; gap:8px; align-items:center; }
+
+.segmented { display:flex; flex-wrap: wrap; gap:6px; margin-bottom: 14px; }
+.segmented button { min-height: 36px; padding: 6px 10px; border:1px solid var(--color-border); background:#fff; border-radius: 7px; cursor:pointer; color: var(--color-text-body); }
+.segmented button.active { background: var(--color-primary); border-color: var(--color-primary); color:#fff; }
+
+.record-list { display: grid; gap: 10px; }
+.record-item { border: 1px solid var(--color-divider); border-radius: 8px; padding: 12px; background: #fff; display:grid; gap:8px; }
+.record-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.record-title { font-weight:700; color: var(--color-text-primary); line-height: 1.45; }
+.record-meta { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.badge { display:inline-flex; align-items:center; gap:4px; padding: 3px 8px; border-radius: 6px; font-size: 12px; background:#f4f4f5; color:#3f3f46; }
+.badge.pink { background: var(--color-accent-soft); color:#a21caf; }
+.badge.green { background:#f0fdf4; color:#166534; }
+.badge.red { background:#fef2f2; color:#991b1b; }
+.badge.yellow { background:#fffbeb; color:#92400e; }
+.record-notes { color: var(--color-text-secondary); line-height:1.7; white-space: pre-wrap; }
+.record-actions { display:flex; justify-content:flex-end; gap:8px; }
+
+.table-wrapper { overflow-x:auto; -webkit-overflow-scrolling: touch; border:1px solid var(--color-divider); border-radius:8px; }
+.data-table { width:100%; min-width: 720px; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
+.data-table caption { text-align:left; padding: 12px 14px; font-weight:700; color: var(--color-text-primary); }
+.data-table th { font-size:11px; font-weight:700; color:#71717a; text-transform:uppercase; letter-spacing:.06em; padding:0 14px 10px; text-align:left; border-bottom:1px solid var(--color-divider); white-space:nowrap; }
+.data-table td { height:44px; padding:0 14px; border-bottom:1px solid #faf0f7; color:var(--color-text-body); }
+.data-table tr:hover td { background:#fffafd; }
+.data-table th.num, .data-table td.num { text-align:right; }
+
+.timeline { display:grid; gap:10px; }
+.timeline-item { display:grid; grid-template-columns: 80px 1fr; gap:10px; align-items:start; }
+.timeline-date { font-size:12px; color:var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+.timeline-body { border-left:2px solid var(--color-accent-line); padding-left:12px; min-height:34px; }
+
+.habit-grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:10px; }
+.habit { padding:14px; border:1px solid var(--color-divider); border-radius:8px; background:#fff; }
+.habit-title { font-weight:700; color:var(--color-text-primary); }
+.habit-track { margin-top:10px; display:grid; grid-template-columns: repeat(7,1fr); gap:4px; }
+.dot { height:22px; border-radius:5px; background:#f4f4f5; border:1px solid #eee; }
+.dot.done { background:var(--color-accent-soft); border-color:var(--color-accent-line); }
+
+.modal { border:1px solid var(--color-border); border-radius: 12px; width:min(620px, calc(100vw - 28px)); padding:0; box-shadow: var(--shadow-md); }
+.modal::backdrop { background: rgba(24,24,27,.32); }
+.modal form { padding:18px; }
+.modal-header, .modal-actions { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.form-grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap:12px; margin:16px 0; }
+.field { display:grid; gap:6px; }
+.field.full-span { grid-column: 1 / -1; }
+.field label { font-size:12px; font-weight:700; color:var(--color-text-secondary); text-transform:uppercase; letter-spacing:.05em; }
+.field input, .field select, .field textarea { width:100%; border:1px solid var(--color-border); border-radius:8px; padding:9px 10px; background:#fff; color:var(--color-text-primary); }
+.field textarea { min-height: 88px; resize: vertical; line-height:1.6; }
+.field .hint { font-size:12px; color:var(--color-text-secondary); }
+.empty-state { border:1px dashed var(--color-border); border-radius:10px; padding:28px; text-align:center; background:#fffafd; }
+.empty-title { font-weight:750; font-size:18px; color:var(--color-text-primary); margin-bottom:8px; }
+.empty-copy { color:var(--color-text-secondary); line-height:1.7; max-width:420px; margin:0 auto 16px; }
+.visually-hidden { position:absolute!important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.drawer-backdrop { position:fixed; inset:0; background:rgba(24,24,27,.24); z-index:39; }
+
+@media (min-width: 768px) { :root { --text-display: 36px; --text-h1: 24px; } }
+@media (max-width: 1023px) {
+  .app-shell { display:block; }
+  .sidebar { position: fixed; z-index: 40; inset:0 auto 0 0; transform: translateX(-105%); transition: transform 180ms ease; box-shadow: var(--shadow-md); }
+  .sidebar.open { transform: translateX(0); }
+  #menuBtn { display:inline-flex; }
+  .main-panel { max-height:none; min-height:100vh; }
+  .topbar { padding: 12px 14px; min-height:70px; }
+  .topbar-actions .secondary-btn { display:none; }
+  .status-strip { grid-template-columns: repeat(2,minmax(0,1fr)); padding:14px 14px 0; }
+  .content-view { padding:14px; }
+  .panel-grid { grid-template-columns:1fr; }
+}
+@media (max-width: 560px) {
+  .topbar { align-items:flex-start; }
+  .topbar-actions { flex-direction:column; align-items:stretch; }
+  .primary-btn, .secondary-btn, .ghost-btn, .icon-button { min-height:44px; }
+  .status-strip { grid-template-columns:1fr; }
+  .form-grid { grid-template-columns:1fr; }
+  input, select, textarea { font-size:16px !important; }
+  .habit-grid { grid-template-columns:1fr; }
+  .timeline-item { grid-template-columns: 68px 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="app-shell" id="app">
+    <aside class="sidebar" id="sidebar" aria-label="主导航">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">C</div>
+        <div>
+          <div class="brand-title">成长工作台</div>
+          <div class="brand-subtitle">2028 求职与生活运营</div>
+        </div>
+      </div>
+      <nav class="nav-list" id="navList" aria-label="工作台模块"></nav>
+      <div class="sidebar-footer">
+        <button class="ghost-btn full" id="exportBtn" type="button">导出备份</button>
+        <label class="ghost-btn full file-label" for="importFile">导入备份</label>
+        <input id="importFile" type="file" accept="application/json" class="visually-hidden" />
+      </div>
+    </aside>
+
+    <main class="main-panel" role="main">
+      <header class="topbar">
+        <button class="icon-button" id="menuBtn" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar">目录</button>
+        <div>
+          <p class="eyebrow" id="pageEyebrow">Personal Operating System</p>
+          <h1 id="pageTitle">今日总览</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="secondary-btn" id="notifyBtn" type="button">开启提醒</button>
+          <button class="primary-btn" id="quickAddBtn" type="button">创建记录</button>
+        </div>
+      </header>
+
+      <section class="status-strip" aria-label="状态摘要" id="statusStrip"></section>
+      <section class="content-view" id="contentView" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <div class="drawer-backdrop" id="backdrop" hidden></div>
+
+  <dialog class="modal" id="entryDialog" aria-labelledby="dialogTitle">
+    <form method="dialog" id="entryForm">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Create Entry</p>
+          <h2 id="dialogTitle">创建记录</h2>
+        </div>
+        <button class="icon-button" value="cancel" type="submit" aria-label="关闭弹窗">关闭</button>
+      </div>
+      <div class="form-grid" id="formFields"></div>
+      <menu class="modal-actions">
+        <button class="ghost-btn" value="cancel" type="submit">继续编辑</button>
+        <button class="primary-btn" id="saveEntryBtn" value="default" type="submit">保存记录</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <template id="emptyTemplate">
+    <div class="empty-state">
+      <p class="empty-title">还没有记录</p>
+      <p class="empty-copy">创建第一条记录后，我会把它放进对应模块，并在总览里给你看下一步。</p>
+      <button class="primary-btn" type="button" data-action="quick-add">创建第一条记录</button>
+    </div>
+  </template>
+
+  <script>
+    const STORAGE_KEY = 'careerLifeWorkbench.v2';
+const LEGACY_STORAGE_KEY = 'careerLifeWorkbench.v1';
+const today = new Date().toISOString().slice(0, 10);
+const seedData = {
+  profile: {
+    targetYear: '2028',
+    name: '陈欣怡',
+    politicalStatus: '中共党员',
+    birth: '2003年4月',
+    currentRole: '快手｜孵化业务部/产品体验组-回森部门中心｜内容风控运营实习生',
+    internshipTime: '20XX.XX - 至今',
+    educationSummary: '中国海洋大学管理学院营销管理研究生；哈尔滨工程大学经济管理学院工商管理本科，本科保研。',
+    targetRoles: ['营销', '运营', '产品', '互联网秋招', '央国企', '公选', '选调', '事业编', '中职教师', '人才引进', '银行'],
+    strengths: ['985/211 本硕背景与本科保研经历', '快手内容风控一线实习经验', '多场景审核、账号治理与提现风控经验', '用户运营、数据助理、证券多行业实习经历', 'SQL 学习与数据辅助判断能力', '国家级/省级竞赛成果密集', '学生组织统筹与文案表达能力'],
+    preferences: ['稳定优先', '泛体制路径优先', '成长空间', '地域适配', '女性友好', '长期可持续'],
+    positioning: '求职主线聚焦营销、运营、产品三个方向；信息追踪覆盖互联网秋招、央国企、公选、选调、事业编、中职教师、人才引进、银行等路径。个人偏好稳定及泛体制内容，互联网方向作为能力发挥与经验匹配路径并行评估。',
+    mustWatchRegions: ['山东', '天津', '江苏', '浙江'],
+    optionalRegions: ['河北', '山西', '陕西', '昆明', '安徽', '河南', '黑龙江', '辽宁'],
+    syncStatus: '本地已保存，云同步待接入'
+  },
+  resume: {
+    education: [
+      { id: crypto.randomUUID(), type: 'resume', section: '教育背景', title: '中国海洋大学（985）｜管理学院｜营销管理', date: '2025.09 - 2028.06', role: '研究生', tags: ['985', '管理学院', '营销管理'], notes: '研究生阶段主线建议：围绕营销管理、平台治理、用户运营、数据分析和公共治理建立求职叙事。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '教育背景', title: '哈尔滨工程大学（211）｜经济管理学院｜工商管理', date: '2021.09 - 2025.06', role: '本科', tags: ['211', '工商管理', '本科保研'], notes: '本科保研；曾获校一等奖学金1次、二等奖学金4次、校优秀毕业生、校优秀共青团干部、校优秀学生干部等。' }
+    ],
+    internship: [
+      { id: crypto.randomUUID(), type: 'resume', section: '实习经历', title: '快手｜孵化业务部/产品体验组-回森部门中心｜内容风控运营实习生', date: '20XX.XX - 至今', tags: ['内容风控', '平台治理', '账号治理', '交易风控', 'SQL'], notes: '多场景内容风控审核：负责回森平台私信、群聊、歌房/云房音频、作品、动态等多场景内容安全治理，日均处理私信举报约450+条，覆盖违法违规、垃圾广告、涉嫌诈骗等核心风险类型；其中诈骗类举报连续多日占比约50%，沉淀私信反诈高频风险识别经验。
+
+账号治理与分级判罚：参与违规账号判罚与复核，覆盖30天以下封禁至永久封禁等不同处罚等级；单班处理永久封禁账号300+条，并复核约100条高风险 case，降低重处罚误判风险，保障平台治理准确性与用户体验。
+
+交易风控与提现审核：参与公会生态下的提现审核，围绕大小号互刷、异常提现、黑设备等风险进行人工核验；累计处理提现审核100+条，结合设备关联、用户行为轨迹及历史记录识别异常提现风险，保障平台资金安全。
+
+风控规则与方法论沉淀：针对色情内容隐蔽化、私信诈骗高发、房间导流等风险趋势，建立“安装渠道+IM上下文+用户历史足迹+设备关联”的多维交叉验证思路，在规则判定与用户体验之间平衡审核尺度。
+
+数据驱动风控探索：学习使用 SQL 查询审核结果及用户行为数据，辅助排查黑设备、房间图片 OCR 导流等复杂 case；当后台信息不足时，通过取数补充判断依据，推动风控处理从单纯后台操作向数据辅助决策延伸。
+
+治理闭环参与：参与用户申诉、举报处理、高频评论监控及群消息 case 处理，覆盖“举报受理—审核判罚—复核申诉—主动监控—规则校准”的平台治理闭环，提升对内容安全、账号治理与社区生态运营的综合理解。
+
+产品体验调研：参与社交语音产品举报功能调研，围绕私信、作品、动态、歌房等场景梳理“风险发现—举报入口—举报提交—审核处理—结果反馈”的全链路流程；对比快手/抖音等产品举报入口与分类设计，支持回森举报入口优化及风控前端体验改进。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '实习经历', title: '北京希望在线线上学科培训学校｜用户运营实习生', date: '2025.01 - 2025.06', tags: ['用户运营', '社群运营', 'AIGC', '内容生产'], notes: '负责每日推送数据监测、推送内容优化及 IP 化品牌内容生产，参与百万级用户私域生态运营；协助搭建社群运营 SOP 体系并探索 AIGC 工具提效，独立完成内容排期、基建搭建等任务，运营活动累计触达用户超 1.2 亿次。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '实习经历', title: '北京中和明讯数据资讯责任有限公司｜数据助理实习生', date: '2025.06 - 2025.09', tags: ['数据录入', '数据校对', '资产核对', '基础数据处理'], notes: '协助负责人采集机电设备、房地产、中国宏观等基础性数据，并按照工作要求对书稿或文字资料进行识别、录入、校对、后期整理等，参与相关数据项目及资产核对。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '实习经历', title: '国信证券股份有限公司黑龙江分公司｜证券实习生', date: '2024.12 - 2025.03', tags: ['证券业务', '合规流程', '客户服务', '风险管理'], notes: '系统学习证券行业基础业务流程、合规操作规范及股票交易规则；参与模拟炒股实践并完成国信金太阳 APP 开户全流程操作，熟悉客户服务与风险管理体系，初步掌握证券从业基础知识与市场分析方法。' }
+    ],
+    projects: [
+      { id: crypto.randomUUID(), type: 'resume', section: '项目经历', title: '中国研究生企业管理创新大赛', date: '2025.09 - 2025.12', role: '负责人', tags: ['企业竞争模拟', '财务分析', '市场定价', '数据复盘'], notes: '主导企业竞争模拟，负责财务分析、市场定价与数据复盘，获全国三等奖。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '项目经历', title: '国潮男装消费行为调研项目', date: '2024.04 - 2024.06', role: '第二作者', tags: ['市场调研', 'Logistic 回归', '结构方程模型', 'Python 文本分析'], notes: '通过线上问卷调查和社交媒体评论分析，研究发现消费者对威可多的商务风格产品有较高需求，但品牌面临价格定位、品牌认可度和消费者粘性等挑战。基于二元 Logistic 回归模型、结构方程模型对威可多中国男装品牌消费现状及前景进行分析，利用 Python 爬取微博、威可多官网等网络文本提取高频词汇并进行文本分析，完成 60 余页调查报告。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '项目经历', title: '新农人参与数字文化产业影响因素研究（省级大学生创新创业训练计划项目）', date: '2023.07 - 2024.07', role: '核心成员', tags: ['大创项目', '实地调研', '结构方程模型', '可视化分析'], notes: '基于 302 份实地调研问卷，探索影响新农人参与数字文化产业的相关因素，为提升新农人参与意愿提供数据支持；负责结构方程模型分析及修正，对研究结果进行可视化分析，撰写报告 40 余页，项目已结题。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '项目经历', title: '“建行杯”第九届“互联网+”大学生创新创业大赛', date: '2023.03 - 2023.08', role: '核心成员', tags: ['互联网+', '商业计划书', '市场分析', '省级一等奖'], notes: '以拟建黑龙江磁探科技开发有限公司为依托，利用智能分布式协同通信干扰系统，为客户提供高性价比的智能分布式协同通信干扰产品；负责公司财务及市场分析部分、商业计划书撰写，获省级一等奖。' }
+    ],
+    awards: [
+      { id: crypto.randomUUID(), type: 'resume', section: '竞赛奖项', title: '全国大学生数学建模竞赛省级二等奖', date: '2022', level: '省级二等奖', notes: '可迁移能力：建模思维、数据分析、团队协作、限时问题拆解。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '竞赛奖项', title: '“建行杯”第九届“互联网+”大学生创新创业大赛省级一等奖', date: '2023', level: '省级一等奖', notes: '求职价值较高：可用于证明商业分析、项目包装、创新创业、路演表达与跨成员协作能力。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '荣誉奖项', title: '校优秀共青团干部', date: '2023', level: '校级荣誉', notes: '适合支撑组织协调、责任意识与学生工作表现。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '荣誉奖项', title: '校优秀学生干部', date: '2023', level: '校级荣誉', notes: '适合放在荣誉奖项区，不建议展开过多。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '竞赛奖项', title: '全国大学生市场调查与分析大赛国家级三等奖', date: '2024', level: '国家级三等奖', notes: '可迁移能力：问卷设计、调研分析、数据洞察、报告呈现。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '竞赛奖项', title: '全国企业竞争模拟大赛国家级二等奖', date: '2024', level: '国家级二等奖', notes: '可迁移能力：经营决策、竞争分析、财务意识、商业判断。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '竞赛奖项', title: '全国高校商业精英挑战赛创新创业竞赛国家级二等奖', date: '2024', level: '国家级二等奖', notes: '可迁移能力：商业策划、创新创业、市场判断、答辩表达。' }
+    ],
+    studentWork: [
+      { id: crypto.randomUUID(), type: 'resume', section: '校园经历', title: '红旗智援博士团办公室｜部门干事', date: '2025.09 - 2026.04', tags: ['推文撰写', '公益助农', '活动执行'], notes: '独立完成推文撰写及官方账号发布 6 次，累计触达达千人次；参与策划并执行公益助农活动 1 次，协助物资协调与现场执行，制作各类活动汇报、方案展示 PPT 共计 10 余次。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '校园经历', title: '校学生会办公室｜副部长', date: '2022.09 - 2023.06', tags: ['组织协调', '材料管理', '文案撰写'], notes: '曾参与组织会议 10 余次，组织校园十佳歌手大赛 2 次，部门值班收发资料累积 200 小时；掌握红头文件撰写方法，独立撰写红头文件 2 次，撰写宣传、工作报告等文件资料 10 余次。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '校园经历', title: '“三下乡”暑期社会实践活动', date: '2023.06 - 2023.09', role: '核心成员', tags: ['社会实践', '公益活动', '实地探访'], notes: '实地探访齐齐哈尔山泉镇中心小学，开展趣味实验、爱心捐赠等活动，项目已结题。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '校园经历', title: '本科院学生会主席团成员', date: '本科阶段', tags: ['组织统筹', '项目推进', '沟通协调'], notes: '适合在简历中合并表达为学生组织核心干部经历，强调大型活动统筹、跨部门协调与团队管理。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '校园经历', title: '研究生星火领学员', date: '研究生阶段', tags: ['学习发展', '研究生培养'], notes: '研究生阶段学生工作较少，不强行包装；作为补充身份即可。' }
+    ],
+    skills: [
+      { id: crypto.randomUUID(), type: 'resume', section: '技能证书', title: '语言能力', date: '长期有效', tags: ['CET-4 550', 'CET-6 507'], notes: '具备基本英语交流能力，英文书写流畅。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '技能证书', title: '软件与数据工具', date: '长期有效', tags: ['Excel', 'PPT', 'Word', 'SPSS', 'Stata', '剪映', 'SQL学习中'], notes: '熟练掌握 Office 办公软件，擅长使用 SPSS、Stata、剪映等；当前在快手实习中学习使用 SQL 进行风控辅助判断。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '技能证书', title: '个人特质', date: '长期有效', tags: ['开朗', '人际交往', '逻辑表达', '责任感'], notes: '性格开朗，擅长人际交往，具备较好的思维逻辑、语言表达能力与工作责任感。' }
+    ],
+    resumeTodos: [
+      { id: crypto.randomUUID(), type: 'resume', section: '待优化', title: '正式简历中将快手实习放到实习经历第一段', date: today, priority: '高', notes: '这是目前最贴近互联网平台岗位的经历，应优先呈现，并针对内容安全/运营/策略岗位准备不同版本。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '待优化', title: '把互联网+省一与商业竞赛组合成商业分析证据链', date: today, priority: '高', notes: '互联网+、企业竞争模拟、商业精英挑战赛、市场调查大赛可以共同支撑商业判断、数据分析、项目包装与答辩表达。' },
+      { id: crypto.randomUUID(), type: 'resume', section: '待优化', title: '本科保研与学生工作整合为“稳定优秀+组织协作”证据链', date: today, priority: '中', notes: '奖学金、优秀毕业生、学生干部、办公室副部长和主席团经历不要散点堆砌，要服务于岗位匹配。' }
+    ]
+  },
+  dataSources: [
+    { id: crypto.randomUUID(), type: 'sources', title: '牛客校招', category: '互联网秋招', priority: '高', status: '待接入', url: 'nowcoder.com', notes: '适合追踪互联网校招、运营/产品/市场岗位、笔面经与企业招聘节奏。字段建议：公司、岗位、城市、截止时间、岗位方向、投递链接、笔面经链接。' },
+    { id: crypto.randomUUID(), type: 'sources', title: 'Boss直聘', category: '互联网秋招', priority: '中', status: '待接入', url: 'zhipin.com', notes: '适合补充市场化岗位供给，但需注意岗位真实性、重复招聘和薪资噪声。更适合做岗位关键词与城市需求观察。' },
+    { id: crypto.randomUUID(), type: 'sources', title: '各公司校招官网', category: '互联网秋招', priority: '高', status: '待接入', url: 'company-career-pages', notes: '最权威来源。重点公司需单独建清单：互联网大厂、消费品、银行科技岗、国央企集团官网。' },
+    { id: crypto.randomUUID(), type: 'sources', title: '实习僧', category: '互联网秋招', priority: '中', status: '待接入', url: 'shixiseng.com', notes: '用于追踪日常实习、暑期实习和转正机会，重点关注运营、市场、产品助理。' },
+    { id: crypto.randomUUID(), type: 'sources', title: '国家公务员局', category: '公考/选调', priority: '高', status: '待接入', url: 'scs.gov.cn', notes: '国考公告、职位表、报名时间、资格审查、笔试节点。需要按专业、学历、政治面貌、基层经历限制筛选。' },
+    { id: crypto.randomUUID(), type: 'sources', title: '各省人事考试网', category: '公考/事业编', priority: '高', status: '待接入', url: 'provincial-exam-sites', notes: '省考、事业编、教师招聘、人社系统公告高频来源。需要先确定重点省份，否则信息量过大。' },
+    { id: crypto.randomUUID(), type: 'sources', title: '各省组织部 / 人社厅', category: '选调/人才引进', priority: '高', status: '待接入', url: 'organization-hrss-sites', notes: '选调生、定向选调、人才引进公告来源。重点看学校范围、专业要求、党员/学生干部条件、服务年限。' },
+    { id: crypto.randomUUID(), type: 'sources', title: '各地教育局 / 人社局', category: '中职教师/事业编', priority: '高', status: '待接入', url: 'local-edu-hrss-sites', notes: '中职教师、事业单位教师岗、人才引进教师岗。重点字段：是否有编、岗位专业、试讲/结构化、资格证要求。' },
+    { id: crypto.randomUUID(), type: 'sources', title: '银行校园招聘官网', category: '银行', priority: '高', status: '待接入', url: 'bank-careers', notes: '政策行、国有行、股份行、城商行。重点关注管培、营销服务、综合管理、运营支持、金融科技非技术岗。' }
+  ],
+  jobLeads: [
+    { id: crypto.randomUUID(), type: 'jobs', title: '牛客校招', org: '互联网秋招', category: '互联网秋招', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：互联网企业校招、产品/运营/营销岗位、笔面经\n更新频率：每周，秋招季每2-3天\n核验规则：以企业官网/牛客企业页为准\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '各公司校招官网', org: '互联网秋招', category: '互联网秋招', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：大厂/平台型企业/消费互联网官方岗位\n更新频率：每周，秋招季每2-3天\n核验规则：官方投递入口优先\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '实习僧', org: '互联网秋招', category: '互联网秋招', stage: '信息源监控', deadline: '长期更新', fit: 78, priority: '中', notes: '监控范围：日常实习、暑期实习、转正机会\n更新频率：每周\n核验规则：回公司官网或招聘方核验\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: 'Boss直聘', org: '互联网秋招', category: '互联网秋招', stage: '信息源监控', deadline: '长期更新', fit: 78, priority: '中', notes: '监控范围：市场化岗位供给、城市需求、关键词趋势\n更新频率：每两周\n核验规则：噪声高，只做补充观察\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '国聘/央企招聘官网/各集团招聘官网', org: '央国企', category: '央国企', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：管培、综合管理、品牌宣传、市场营销、运营管理\n更新频率：每周，春秋招季每3天\n核验规则：集团官网/官方招聘平台\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '六大行与重点地方银行官网', org: '银行', category: '银行', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：管培、营销服务、综合运营、客户经理、金融科技非技术岗\n更新频率：每周，秋招季每3天\n核验规则：银行官网为准\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '国家公务员局', org: '公考/选调', category: '公考/选调', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：国考公告、职位表、报名节点\n更新频率：每周，公告季每日\n核验规则：官方职位表\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '各省组织部/人社厅/人事考试网', org: '公考/选调', category: '公考/选调', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：省考、定向选调、普通选调、公选\n更新频率：每周，公告季每日\n核验规则：组织部/人社厅/考试网\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '各省市人社局/人事考试网', org: '事业编/人才引进', category: '事业编/人才引进', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：事业单位统考、区县事业编、人才引进\n更新频率：每周，公告季每日\n核验规则：官方公告和岗位表\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '教育局/人社局/学校官网', org: '中职教师', category: '中职教师', stage: '信息源监控', deadline: '长期更新', fit: 92, priority: '高', notes: '监控范围：中职教师、管理类教师、事业编教师岗\n更新频率：每周，公告季每日\n核验规则：教育局/人社局/学校官网\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '高校人才网/高才网/粉笔/华图/银行招聘网', org: '聚合提醒', category: '聚合提醒', stage: '信息源监控', deadline: '长期更新', fit: 78, priority: '中', notes: '监控范围：公告提醒和入口索引\n更新频率：每周\n核验规则：必须回官方原文，不直接投递\n当前阶段目标：保证来源完整与节奏可追踪，不急于精细化到具体岗位。' }
+  ],
+  jobs: [
+    { id: crypto.randomUUID(), type: 'jobs', title: '营销 / 用户运营 / 产品运营秋招岗位', org: '互联网平台', category: '互联网秋招', stage: '重点匹配', deadline: '2027-09-01', fit: 90, priority: '高', notes: '主线岗位：营销、运营、产品。快手内容风控、希望在线用户运营、竞赛项目和数据调研经历可分别支撑平台理解、用户触达、项目推进和数据分析能力。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '央国企营销 / 品牌 / 综合管理岗', org: '央国企', category: '央国企', stage: '重点关注', deadline: '2027-08-01', fit: 88, priority: '高', notes: '稳定偏好强匹配。可包装教育背景、保研、学生干部、竞赛奖项、商业分析项目和互联网实习，重点关注管培、品牌宣传、市场运营、综合管理、人力党群等岗位。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '银行校招 / 管培 / 营销服务岗', org: '政策行 / 国有行 / 股份行', category: '银行', stage: '持续追踪', deadline: '2027-09-01', fit: 86, priority: '高', notes: '稳定路径重点池。证券实习、工商管理背景、竞赛商业分析和学生组织经历可支撑金融机构营销、运营、综合管理与管培方向。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '公选 / 人才引进公告追踪', org: '组织部 / 人社局 / 人才办', category: '泛体制', stage: '重点关注', deadline: '2027-06-01', fit: 84, priority: '高', notes: '偏稳定路径。重点关注学历门槛、专业目录、党员/学生干部/奖项要求、地区政策、安家补贴、服务年限与考核方式。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '国考 / 省考 / 选调报名节点', org: '公务员考试', category: '公考/选调', stage: '持续追踪', deadline: '2027-10-15', fit: 86, priority: '高', notes: '记录公告时间、报名时间、岗位表、专业限制、备考资料、上岸经验。党员、学生干部、保研背景、奖学金和公共治理理解可作为稳定性与综合素质背书。' },
+    { id: crypto.randomUUID(), type: 'jobs', title: '事业编 / 中职教师招聘', org: '事业单位 / 教育局 / 学校', category: '事业编/教师', stage: '重点关注', deadline: '2027-03-01', fit: 84, priority: '高', notes: '按省市区县建立节点库，关注研究生学历、工商管理/营销管理专业匹配、面试试讲形式、材料清单、年龄限制与编制性质。' }
+  ],
+  life: [
+    { id: crypto.randomUUID(), type: 'life', title: '早起一杯水', date: today, category: '补水', status: '已完成', score: 4, notes: '把它作为最低成本的启动仪式，不追求完美，只追求不断线。' },
+    { id: crypto.randomUUID(), type: 'life', title: '睡眠状态', date: today, category: '睡眠', status: '待观察', score: 3, notes: '记录入睡时间、醒来感受、白天精力。连续三天低于 3 分时减少额外消耗。' },
+    { id: crypto.randomUUID(), type: 'life', title: '生理期与情绪波动', date: today, category: '生理期', status: '记录中', score: 3, notes: '记录日期、疼痛程度、情绪关键词、应对方式。不要用意志力硬扛。' }
+  ],
+  growth: [
+    { id: crypto.randomUUID(), type: 'growth', title: '亲密关系执念复盘', date: today, category: '情绪课题', cadence: '每周', status: '进行中', notes: '问题：我是在想要爱，还是在用关系证明自己值得被爱？行动：把今天 30 分钟精力转回身体、学业或作品。' },
+    { id: crypto.randomUUID(), type: 'growth', title: '财商微练习', date: today, category: '财商', cadence: '每月', status: '计划中', notes: '记录收入、固定支出、学习投资、冲动消费触发点。先看现金流，再谈收益率。' },
+    { id: crypto.randomUUID(), type: 'growth', title: '情商观察笔记', date: today, category: '情商', cadence: '每周', status: '计划中', notes: '复盘一次沟通：事实、感受、需求、下次表达。重点不是讨好别人，是更清楚地表达自己。' }
+  ],
+  reminders: [
+    { id: crypto.randomUUID(), type: 'reminders', title: '每周日复盘', date: today, category: '自我提升', status: '待设置', notes: '回顾求职推进、生活状态、情绪能量分配。' }
+  ]
+};
+
+const modules = [
+  { id: 'overview', name: '今日总览', eyebrow: 'Overview' },
+  { id: 'profile', name: '个人画像', eyebrow: 'Profile' },
+  { id: 'resume', name: '简历资产库', eyebrow: 'Resume Assets' },
+  { id: 'sources', name: '信息源雷达', eyebrow: 'Source Radar' },
+  { id: 'jobs', name: '求职难点', eyebrow: 'Career Strategy' },
+  { id: 'life', name: '生活运营', eyebrow: 'Life Operations' },
+  { id: 'growth', name: '自我提升', eyebrow: 'Self Growth' },
+  { id: 'sync', name: '同步与归档', eyebrow: 'Sync Archive' }
+];
+let state = loadState();
+let active = 'overview';
+let activeFilter = '全部';
+
+function loadState() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return structuredClone(seedData);
+  try { return { ...structuredClone(seedData), ...JSON.parse(raw) }; }
+  catch { return structuredClone(seedData); }
+}
+function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); render(); }
+function byDate(a, b) { return String(a.deadline || a.date || '').localeCompare(String(b.deadline || b.date || '')); }
+function statusClass(value) {
+  if (['已完成', '高', '适配', '进行中'].includes(value)) return 'green';
+  if (['风险', '低', '错过'].includes(value)) return 'red';
+  if (['待观察', '中', '待设置', '计划中'].includes(value)) return 'yellow';
+  return 'pink';
+}
+function resumeItems() { return [...(state.resume?.education || []), ...(state.resume?.internship || []), ...(state.resume?.projects || []), ...(state.resume?.awards || []), ...(state.resume?.studentWork || []), ...(state.resume?.skills || []), ...(state.resume?.resumeTodos || [])]; }
+function allRecords() { return [...resumeItems(), ...(state.dataSources || []), ...(state.jobLeads || []), ...state.jobs, ...state.life, ...state.growth, ...state.reminders]; }
+
+function render() {
+  renderNav(); renderKpis(); renderView();
+  document.getElementById('pageTitle').textContent = modules.find(m => m.id === active).name;
+  document.getElementById('pageEyebrow').textContent = modules.find(m => m.id === active).eyebrow;
+}
+function renderNav() {
+  const nav = document.getElementById('navList');
+  nav.innerHTML = modules.map(m => {
+    const count = m.id === 'overview' ? allRecords().length : m.id === 'sync' ? 1 : m.id === 'profile' ? state.profile.strengths.length : m.id === 'resume' ? resumeItems().length : m.id === 'sources' ? (state.dataSources?.length || 0) : m.id === 'jobs' ? ((state.jobs?.length || 0) + (state.jobLeads?.length || 0)) : (state[m.id]?.length || 0);
+    return `<button class="nav-item ${active === m.id ? 'active' : ''}" type="button" data-nav="${m.id}"><span>${m.name}</span><span class="nav-count">${count}</span></button>`;
+  }).join('');
+}
+function renderKpis() {
+  const nextDeadline = [...state.jobs].sort(byDate)[0]?.deadline || '待补充';
+  const lifeScore = state.life.length ? (state.life.reduce((s, x) => s + Number(x.score || 0), 0) / state.life.length).toFixed(1) : '0.0';
+  const awardNational = (state.resume?.awards || []).filter(x => String(x.level || '').includes('国家')).length;
+  document.getElementById('statusStrip').innerHTML = [
+    ['求职事项', state.jobs.length, `最近节点 ${nextDeadline}`],
+    ['求职主线', '3', '营销 / 运营 / 产品'],
+    ['稳定路径', '7', '央国企/公选/选调/事业编/教师/人才引进/银行'],
+    ['生活记录', state.life.length, `平均状态 ${lifeScore}/5`]
+  ].map(([label, value, note]) => `<article class="kpi-card"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div><div class="kpi-note">${note}</div></article>`).join('');
+}
+
+function renderView() {
+  if (active === 'overview') return renderOverview();
+  if (active === 'profile') return renderProfile();
+  if (active === 'resume') return renderResume();
+  if (active === 'sources') return renderSources();
+  if (active === 'jobs') return renderJobs();
+  if (active === 'life') return renderLife();
+  if (active === 'growth') return renderGrowth();
+  return renderSync();
+}
+function renderOverview() {
+  const deadlines = [...state.jobs].sort(byDate).slice(0, 5);
+  setContent(`<div class="panel-grid">
+    <section class="card"><div class="card-header"><div><h2>下一步作战面板</h2><p class="card-copy">核心不是海投，而是把你的优势翻译成岗位筛选条件：学历、表达、整理、长期主义和稳定偏好。</p></div><button class="primary-btn" data-action="quick-add">创建记录</button></div>${renderTimeline(deadlines)}</section>
+    <aside class="card"><h2>今日能量分配</h2><p class="card-copy">如果亲密关系的匮乏感开始抢占注意力，先把它记录下来，再把一小块行动还给自己。</p><div class="record-list">${state.growth.slice(0,2).map(renderRecord).join('')}</div></aside>
+  </div>`);
+}
+
+function renderProfile() {
+  setContent(`<div class="panel-grid">
+    <section class="card"><div class="card-header"><div><h2>个人画像</h2><p class="card-copy">${state.profile.positioning}</p></div><button class="primary-btn" data-nav="resume" type="button">查看简历资产</button></div>
+      <div class="record-list">
+        <article class="record-item"><div class="record-title">当前身份</div><div class="record-notes">${state.profile.currentRole}<br>时间：${state.profile.internshipTime}</div></article>
+        <article class="record-item"><div class="record-title">教育背景</div><div class="record-notes">${state.profile.educationSummary}</div></article>
+        <article class="record-item"><div class="record-title">目标方向</div><div class="record-meta">${state.profile.targetRoles.map(x => `<span class="badge pink">${x}</span>`).join('')}</div></article>
+        <article class="record-item"><div class="record-title">优势标签</div><div class="record-meta">${state.profile.strengths.map(x => `<span class="badge green">${x}</span>`).join('')}</div></article>
+        <article class="record-item"><div class="record-title">地域优先级</div><div class="record-notes">必看：${state.profile.mustWatchRegions.join('、')}<br>可看：${state.profile.optionalRegions.join('、')}</div></article>
+      </div>
+    </section>
+    <aside class="card"><h2>推荐主线</h2><p class="card-copy">第一主线：营销、运营、产品。路径池：互联网秋招、央国企、公选、选调、事业编、中职教师、人才引进、银行。排序原则：稳定及泛体制内容优先，其次看岗位成长性和经历匹配度。</p></aside>
+  </div>`);
+}
+function renderResume() {
+  const items = resumeItems();
+  const filters = ['全部', ...new Set(items.map(x => x.section))];
+  const rows = items.filter(x => activeFilter === '全部' || x.section === activeFilter);
+  setContent(`<section class="card"><div class="card-header"><div><h2>简历资产库</h2><p class="card-copy">把实习、竞赛、学生工作拆成可复用素材。以后每投一个岗位，不是重写简历，而是从这里抽取最匹配的证据。</p></div><button class="primary-btn" data-action="quick-add">创建求职记录</button></div>${renderFilters(filters)}<div class="record-list">${rows.map(renderResumeAsset).join('')}</div></section>`);
+}
+function renderResumeAsset(x) {
+  const tags = x.tags || [x.level, x.priority].filter(Boolean);
+  return `<article class="record-item"><div class="record-top"><div><div class="record-title">${x.title}</div><div class="record-meta"><span class="badge pink">${x.section}</span><span class="badge">${x.date || '待补充时间'}</span>${tags.map(t => `<span class="badge ${statusClass(t)}">${t}</span>`).join('')}</div></div></div><div class="record-notes">${x.notes || ''}</div></article>`;
+}
+
+function renderSources() {
+  const sources = state.dataSources || [];
+  const filters = ['全部', ...new Set(sources.map(x => x.category))];
+  const rows = sources.filter(x => activeFilter === '全部' || x.category === activeFilter);
+  setContent(`<div class="panel-grid">
+    <section class="card"><div class="card-header"><div><h2>信息源雷达</h2><p class="card-copy">先把信息源分层：官方来源优先，平台招聘补充，经验贴辅助判断。后续爬数据时按你的地区和岗位偏好过滤，而不是无差别抓全网。</p></div></div>${renderFilters(filters)}<div class="record-list">${rows.map(renderSourceCard).join('')}</div></section>
+    <aside class="card"><h2>抓取前需要确认</h2><div class="record-list">
+      <article class="record-item"><div class="record-title">地域范围</div><div class="record-notes">必看地区：山东、天津、江苏、浙江。可看地区：河北、山西、陕西、昆明、安徽、河南、黑龙江、辽宁。暂不做全国全量，避免噪声过高。</div></article>
+      <article class="record-item"><div class="record-title">岗位关键词</div><div class="record-notes">营销、运营、产品、管培、综合管理、品牌宣传、党建党群、教师、人才引进、选调。</div></article>
+      <article class="record-item"><div class="record-title">筛选口径</div><div class="record-notes">优先稳定与泛体制；地域优先级高于泛泛岗位热度。其次看专业限制、学历门槛、报名截止、城市、发展空间和备考成本。</div></article>
+    </div></aside>
+  </div>`);
+}
+function renderSourceCard(x) {
+  return `<article class="record-item"><div class="record-top"><div><div class="record-title">${x.title}</div><div class="record-meta"><span class="badge pink">${x.category}</span><span class="badge ${statusClass(x.priority)}">${x.priority}</span><span class="badge ${statusClass(x.status)}">${x.status}</span></div></div></div><div class="record-notes">来源：${x.url}<br>${x.notes}</div></article>`;
+}
+function renderJobs() {
+  const pool = [...(state.jobLeads || []), ...(state.jobs || [])];
+  const filters = ['全部', ...new Set(pool.map(x => x.category))];
+  const rows = pool.filter(x => activeFilter === '全部' || x.category === activeFilter).sort(byDate);
+  setContent(`<section class="card"><div class="card-header"><div><h2>求职难点</h2><p class="card-copy">这里现在以 2028 届长期求职为目标：优先保证信息来源全面、更新节奏稳定、路径分类清楚。具体岗位等临近投递期再精筛。</p></div><button class="primary-btn" data-action="quick-add">创建求职记录</button></div>${renderFilters(filters)}${renderJobTable(rows)}</section>`);
+}
+function renderLife() {
+  setContent(`<div class="panel-grid"><section class="card"><div class="card-header"><div><h2>生活运营</h2><p class="card-copy">记录健身、睡眠、补水、情绪、生理期。状态不是成绩单，是你调配精力的仪表盘。</p></div><button class="primary-btn" data-action="quick-add">创建生活记录</button></div><div class="habit-grid">${state.life.map(renderHabit).join('')}</div></section><aside class="card"><h2>提醒建议</h2><div class="record-list">${state.reminders.map(renderRecord).join('')}</div></aside></div>`);
+}
+function renderGrowth() {
+  setContent(`<section class="card"><div class="card-header"><div><h2>自我提升</h2><p class="card-copy">财商、情商、关系执念复盘。复盘不是批判自己，是把能量从内耗里捞回来。</p></div><button class="primary-btn" data-action="quick-add">创建复盘记录</button></div><div class="record-list">${state.growth.map(renderRecord).join('')}</div></section>`);
+}
+function renderSync() {
+  setContent(`<div class="panel-grid"><section class="card"><h2>同步与归档</h2><p class="card-copy">当前为本地优先版本：浏览器自动保存，支持导出 JSON 备份、导入恢复。跨设备实时同步需要接入云端数据库。</p><div class="actions-row" style="margin-top:14px"><button class="primary-btn" id="exportInline" type="button">导出备份</button><label class="secondary-btn file-label" for="importFile">导入备份</label><button class="ghost-btn" id="resetDemo" type="button">恢复示例数据</button></div></section><aside class="card"><h2>后续同步方案</h2><p class="card-copy">把 localStorage 层替换为云端表：profiles、resume_assets、data_sources、career_items、life_logs、growth_reviews、reminders。然后增加定时抓取岗位与考试公告的任务。</p></aside></div>`);
+  document.getElementById('exportInline')?.addEventListener('click', exportData);
+  document.getElementById('resetDemo')?.addEventListener('click', () => { state = structuredClone(seedData); saveState(); });
+}
+function setContent(html) { document.getElementById('contentView').innerHTML = html || document.getElementById('emptyTemplate').innerHTML; }
+function renderFilters(filters) { return `<div class="segmented" role="tablist" aria-label="求职分类筛选">${filters.map(f => `<button class="${activeFilter === f ? 'active' : ''}" type="button" data-filter="${f}">${f}</button>`).join('')}</div>`; }
+function renderJobTable(rows) {
+  if (!rows.length) return document.getElementById('emptyTemplate').innerHTML;
+  return `<div class="table-wrapper"><table class="data-table"><caption>求职信息追踪表</caption><thead><tr><th>事项</th><th>组织/渠道</th><th>分类</th><th>阶段</th><th>截止节点</th><th class="num">适配度</th><th>优先级</th></tr></thead><tbody>${rows.map(x => `<tr><td>${x.title}</td><td>${x.org}</td><td>${x.category}</td><td><span class="badge ${statusClass(x.stage)}">${x.stage}</span></td><td>${x.deadline}</td><td class="num">${x.fit || 0}%</td><td><span class="badge ${statusClass(x.priority)}">${x.priority}</span></td></tr>`).join('')}</tbody></table></div>`;
+}
+function renderTimeline(items) { return `<div class="timeline">${items.map(x => `<div class="timeline-item"><div class="timeline-date">${x.deadline || x.date}</div><div class="timeline-body"><div class="record-title">${x.title}</div><div class="record-notes">${x.notes}</div></div></div>`).join('')}</div>`; }
+function renderRecord(x) { return `<article class="record-item"><div class="record-top"><div><div class="record-title">${x.title}</div><div class="record-meta"><span class="badge pink">${x.category || x.type}</span><span class="badge ${statusClass(x.status || x.priority)}">${x.status || x.priority || '记录中'}</span></div></div><button class="ghost-btn" type="button" data-delete="${x.type}:${x.id}">删除</button></div><div class="record-notes">${x.notes || ''}</div></article>`; }
+function renderHabit(x) { const done = Math.max(1, Math.min(7, Number(x.score || 1) + 2)); return `<article class="habit"><div class="habit-title">${x.title}</div><div class="record-meta"><span class="badge pink">${x.category}</span><span class="badge ${statusClass(x.status)}">${x.status}</span></div><div class="habit-track" aria-label="状态热度 ${x.score} 分">${Array.from({length:7}, (_,i)=>`<span class="dot ${i < done ? 'done' : ''}"></span>`).join('')}</div><p class="card-copy" style="margin-top:10px">${x.notes}</p></article>`; }
+
+function openDialog() {
+  const type = active === 'jobs' || active === 'profile' || active === 'resume' ? 'jobs' : active === 'life' ? 'life' : active === 'growth' ? 'growth' : 'jobs';
+  const fields = type === 'jobs' ? jobFields() : type === 'life' ? lifeFields() : growthFields();
+  document.getElementById('formFields').innerHTML = fields;
+  document.getElementById('entryForm').dataset.type = type;
+  document.getElementById('entryDialog').showModal();
+}
+function jobFields() { return field('title','事项名称','text','如：某省选调公告') + field('org','组织/渠道','text','如：广东省人社厅') + field('category','分类','text','企业岗位 / 公考 / 事业编') + field('stage','阶段','text','资料池 / 报名中 / 已投递') + field('deadline','截止节点','date','') + field('fit','适配度','number','0-100') + field('priority','优先级','text','高 / 中 / 低') + area('notes','资料与经验总结','岗位要求、材料清单、经验链接、下一步'); }
+function lifeFields() { return field('title','记录名称','text','如：力量训练') + field('date','日期','date','') + field('category','分类','text','健身 / 睡眠 / 情绪 / 生理期') + field('status','状态','text','已完成 / 待观察') + field('score','状态评分','number','1-5') + area('notes','备注','身体感受、诱因、要提醒自己的事'); }
+function growthFields() { return field('title','复盘主题','text','如：关系匮乏感复盘') + field('date','日期','date','') + field('category','分类','text','财商 / 情商 / 情绪课题') + field('cadence','频率','text','每周 / 每月') + field('status','状态','text','进行中 / 计划中') + area('notes','复盘内容','事实、感受、需求、下一步行动'); }
+function field(name, label, type, placeholder) { return `<div class="field"><label for="${name}">${label}</label><input id="${name}" name="${name}" type="${type}" placeholder="${placeholder}" ${type === 'date' ? `value="${today}"` : ''}></div>`; }
+function area(name, label, placeholder) { return `<div class="field full-span"><label for="${name}">${label}</label><textarea id="${name}" name="${name}" placeholder="${placeholder}"></textarea><div class="hint">写短一点也可以，关键是能追踪。</div></div>`; }
+function saveEntry(event) {
+  if (event.submitter?.value === 'cancel') return;
+  event.preventDefault();
+  const form = event.currentTarget;
+  const type = form.dataset.type;
+  const data = Object.fromEntries(new FormData(form).entries());
+  if (!data.title?.trim()) { alert('请填写记录名称'); return; }
+  data.id = crypto.randomUUID(); data.type = type;
+  if (type === 'jobs') { data.fit = Number(data.fit || 0); }
+  if (type === 'life') { data.score = Number(data.score || 3); }
+  state[type].push(data); document.getElementById('entryDialog').close(); form.reset(); saveState();
+}
+function exportData() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = `career-life-workbench-${today}.json`; a.click(); URL.revokeObjectURL(url);
+}
+function importData(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { try { state = { ...structuredClone(seedData), ...JSON.parse(reader.result) }; saveState(); alert('备份已导入'); } catch { alert('备份文件无法识别，请选择 JSON 文件'); } };
+  reader.readAsText(file);
+}
+function requestNotify() {
+  if (!('Notification' in window)) { alert('当前浏览器不支持通知。可以先用系统日历设置提醒。'); return; }
+  Notification.requestPermission().then(result => {
+    if (result === 'granted') new Notification('提醒已开启', { body: '这个版本支持本机通知授权，具体定时提醒需要接入系统或云端任务。' });
+  });
+}
+
+document.addEventListener('click', (e) => {
+  const navBtn = e.target.closest('[data-nav]');
+  if (navBtn) { active = navBtn.dataset.nav; activeFilter = '全部'; closeSidebar(); render(); }
+  const filterBtn = e.target.closest('[data-filter]');
+  if (filterBtn) { activeFilter = filterBtn.dataset.filter; render(); }
+  const quick = e.target.closest('[data-action="quick-add"], #quickAddBtn');
+  if (quick) openDialog();
+  const del = e.target.closest('[data-delete]');
+  if (del) { const [type, id] = del.dataset.delete.split(':'); state[type] = state[type].filter(x => x.id !== id); saveState(); }
+});
+document.getElementById('entryForm').addEventListener('submit', saveEntry);
+document.getElementById('exportBtn').addEventListener('click', exportData);
+document.getElementById('importFile').addEventListener('change', e => importData(e.target.files[0]));
+document.getElementById('notifyBtn').addEventListener('click', requestNotify);
+document.getElementById('menuBtn').addEventListener('click', () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').hidden = false; document.getElementById('menuBtn').setAttribute('aria-expanded', 'true'); });
+document.getElementById('backdrop').addEventListener('click', closeSidebar);
+function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').hidden = true; document.getElementById('menuBtn').setAttribute('aria-expanded', 'false'); }
+if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
+render();
+
+  </script>
+<script type="text/javascript" src="/accessproxy_statics/h5_fp.js" defer></script>
+<script type="text/javascript" src="/accessproxy_statics/wm.js" defer></script>
+</body>
+</html>

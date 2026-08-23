@@ -1,0 +1,19 @@
+{
+  "name": "求职生活成长工作台",
+  "short_name": "成长工作台",
+  "description": "规划研究生求职、生活状态与自我提升的移动端工作台",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fff7fb",
+  "theme_color": "#d946ef",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
