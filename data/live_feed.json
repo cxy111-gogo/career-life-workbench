@@ -1,0 +1,74 @@
+{
+  "updatedAt": "2026-08-25 16:24",
+  "version": "live-feed-20260825",
+  "items": [
+    {
+      "title": "国家公务员局｜国考公告与职位表",
+      "category": "公考/选调",
+      "region": "全国",
+      "priority": "高",
+      "status": "长期监控",
+      "source": "国家公务员局",
+      "url": "https://www.scs.gov.cn/",
+      "note": "重点看公告时间、职位表、报名节点、专业限制、政治面貌、基层经历要求。"
+    },
+    {
+      "title": "山东人事考试信息网｜省考/事业编/教师招聘",
+      "category": "山东",
+      "region": "山东",
+      "priority": "高",
+      "status": "必看地区",
+      "source": "山东人事考试信息网",
+      "url": "http://hrss.shandong.gov.cn/rsks/",
+      "note": "山东为必看地区，优先追踪省考、事业编统考、人才引进、教师招聘。"
+    },
+    {
+      "title": "天津市人事考试网上报名公共服务平台",
+      "category": "天津",
+      "region": "天津",
+      "priority": "高",
+      "status": "必看地区",
+      "source": "天津人事考试",
+      "url": "http://rsks.hrss.tj.gov.cn/",
+      "note": "天津为必看地区，关注省考、事业单位、人才引进、国央企在津岗位。"
+    },
+    {
+      "title": "江苏省人事考试网｜事业单位/省考/选调",
+      "category": "江苏",
+      "region": "江苏",
+      "priority": "高",
+      "status": "必看地区",
+      "source": "江苏省人事考试网",
+      "url": "http://jshrss.jiangsu.gov.cn/col/col57268/",
+      "note": "江苏为必看地区，重点看岗位专业目录、学历条件和报名窗口。"
+    },
+    {
+      "title": "浙江省人事考试院｜公务员/事业单位/人才引进",
+      "category": "浙江",
+      "region": "浙江",
+      "priority": "高",
+      "status": "必看地区",
+      "source": "浙江人事考试网",
+      "url": "http://www.zjks.com/",
+      "note": "浙江为必看地区，适合长期关注人才引进、事业编和综合管理类岗位。"
+    },
+    {
+      "title": "国聘｜央国企校园招聘与社会招聘",
+      "category": "央国企",
+      "region": "全国",
+      "priority": "高",
+      "status": "长期监控",
+      "source": "国聘",
+      "url": "https://www.iguopin.com/",
+      "note": "重点看管培、综合管理、品牌宣传、市场营销、运营管理、党群人力。"
+    },
+    {
+      "title": "中国银行/工商银行/建设银行等银行校招官网",
+      "category": "银行",
+      "region": "全国/重点城市",
+      "priority": "高",
+      "status": "长期监控",
+      "source": "各银行招聘官网",
+      "url": "https://campus.chinahr.com/",
+      "note": "银行方向优先看管培、营销服务、综合运营、客户经理、金融科技非技术岗。"
+    },
