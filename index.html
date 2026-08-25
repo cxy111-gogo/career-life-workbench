@@ -317,7 +317,18 @@
           return '<div class="item" style="box-shadow:none;margin-top:10px"><div class="item-title">' + escapeHtml(r.title) + '<span class="tag">' + escapeHtml(r.type) + '</span></div><div class="item-note">' + escapeHtml(r.note) + '</div><div class="item-meta"><span class="tag">' + escapeHtml(r.date) + '</span><button class="btn" data-del="' + i + '" type="button">删除</button></div></div>';
         }).join('');
       }
-      var feedState = { items: [], filter: '全部', timer: null };
+      var defaultFeed = [
+        { title: '国家公务员局｜国考公告与职位表', category: '公考/选调', region: '全国', priority: '高', status: '内置兜底', source: '国家公务员局', url: 'https://www.scs.gov.cn/', note: '重点看公告时间、职位表、报名节点、专业限制、政治面貌、基层经历要求。' },
+        { title: '山东人事考试信息网｜省考/事业编/教师招聘', category: '山东', region: '山东', priority: '高', status: '必看地区', source: '山东人事考试信息网', url: 'http://hrss.shandong.gov.cn/rsks/', note: '山东为必看地区，优先追踪省考、事业编统考、人才引进、教师招聘。' },
+        { title: '天津市人事考试网上报名公共服务平台', category: '天津', region: '天津', priority: '高', status: '必看地区', source: '天津人事考试', url: 'http://rsks.hrss.tj.gov.cn/', note: '天津为必看地区，关注省考、事业单位、人才引进、国央企在津岗位。' },
+        { title: '江苏省人事考试网｜事业单位/省考/选调', category: '江苏', region: '江苏', priority: '高', status: '必看地区', source: '江苏省人事考试网', url: 'http://jshrss.jiangsu.gov.cn/col/col57268/', note: '江苏为必看地区，重点看岗位专业目录、学历条件和报名窗口。' },
+        { title: '浙江省人事考试院｜公务员/事业单位/人才引进', category: '浙江', region: '浙江', priority: '高', status: '必看地区', source: '浙江人事考试网', url: 'http://www.zjks.com/', note: '浙江为必看地区，适合长期关注人才引进、事业编和综合管理类岗位。' },
+        { title: '国聘｜央国企校园招聘与社会招聘', category: '央国企', region: '全国', priority: '高', status: '长期监控', source: '国聘', url: 'https://www.iguopin.com/', note: '重点看管培、综合管理、品牌宣传、市场营销、运营管理、党群人力。' },
+        { title: '银行校招官网｜管培/营销服务/综合运营', category: '银行', region: '全国/重点城市', priority: '高', status: '长期监控', source: '各银行招聘官网', url: 'https://campus.chinahr.com/', note: '银行方向优先看管培、营销服务、综合运营、客户经理、金融科技非技术岗。' },
+        { title: '牛客校招｜互联网营销/运营/产品信息流', category: '互联网秋招', region: '全国/重点城市', priority: '高', status: '长期监控', source: '牛客', url: 'https://www.nowcoder.com/jobs/school', note: '适合追踪互联网校招、运营/产品/市场岗位、笔面经与企业招聘节奏。' },
+        { title: '高校人才网｜人才引进/事业单位/教师岗', category: '人才引进/教师', region: '全国/重点地区', priority: '中', status: '聚合提醒', source: '高校人才网', url: 'https://www.gaoxiaojob.com/', note: '只做公告线索提醒，最终必须回官方公告核验，不直接依赖聚合站投递。' }
+      ];
+      var feedState = { items: defaultFeed.slice(), filter: '全部', timer: null };
       function renderFeedFilters(items) {
         var wrap = $('feedFilters');
         if (!wrap) return;
@@ -351,21 +362,29 @@
         shell.addEventListener('mouseenter', function () { if (feedState.timer) clearInterval(feedState.timer); });
         shell.addEventListener('mouseleave', startFeedScroll);
       }
-      function loadFeed() {
-        var stamp = Date.now();
-        return fetch('./data/live_feed.json?v=' + stamp, { cache: 'no-store' }).then(function (res) {
-          if (!res.ok) throw new Error('feed not found');
+      function applyFeed(data, label) {
+        feedState.items = (data && data.items && data.items.length) ? data.items : defaultFeed.slice();
+        if (feedState.items.filter(function (x) { return x.category === feedState.filter; }).length === 0) feedState.filter = '全部';
+        var updated = $('feedUpdated');
+        if (updated) updated.textContent = label || ('更新于 ' + ((data && data.updatedAt) || '内置数据'));
+        renderFeedFilters(feedState.items);
+        renderFeed();
+        startFeedScroll();
+      }
+      function fetchJson(url) {
+        return fetch(url + '?v=' + Date.now(), { cache: 'no-store' }).then(function (res) {
+          if (!res.ok) throw new Error('not found: ' + url);
           return res.json();
+        });
+      }
+      function loadFeed() {
+        applyFeed({ items: defaultFeed, updatedAt: '内置兜底' }, '内置信息源，正在尝试同步');
+        return fetchJson('./data/live_feed.json').catch(function () {
+          return fetchJson('./live_feed.json');
         }).then(function (data) {
-          feedState.items = data.items || [];
-          var updated = $('feedUpdated');
-          if (updated) updated.textContent = '更新于 ' + (data.updatedAt || '未知时间');
-          renderFeedFilters(feedState.items);
-          renderFeed();
-          startFeedScroll();
+          applyFeed(data, '更新于 ' + (data.updatedAt || 'JSON 数据'));
         }).catch(function () {
-          var updated = $('feedUpdated');
-          if (updated) updated.textContent = '信息源读取失败';
+          applyFeed({ items: defaultFeed, updatedAt: '内置兜底' }, '使用内置信息源');
         });
       }
       var form = $('recordForm');
