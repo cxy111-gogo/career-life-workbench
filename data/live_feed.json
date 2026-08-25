@@ -1,3 +1,47 @@
+{
+  "updatedAt": "2026-08-25 17:39",
+  "version": "auto-1787650740348",
+  "mode": "github-actions-scheduled-feed",
+  "description": "由 GitHub Actions 定时更新。当前为信息源连通性与重点来源滚动监控，不等同于自动投递或完整岗位爬虫。",
+  "items": [
+    {
+      "title": "国家公务员局｜国考公告与职位表",
+      "category": "公考/选调",
+      "region": "全国",
+      "priority": "高",
+      "source": "国家公务员局",
+      "url": "https://www.scs.gov.cn/",
+      "note": "重点看公告时间、职位表、报名节点、专业限制、政治面貌、基层经历要求。",
+      "status": "待人工核验",
+      "checkedAt": "2026-08-25 17:38",
+      "signal": "自动访问失败，可能是网站反爬/网络限制；仍保留为人工关注来源。"
+    },
+    {
+      "title": "山东人事考试信息网｜省考/事业编/教师招聘",
+      "category": "山东",
+      "region": "山东",
+      "priority": "高",
+      "source": "山东人事考试信息网",
+      "url": "http://hrss.shandong.gov.cn/rsks/",
+      "note": "山东为必看地区，优先追踪省考、事业编统考、人才引进、教师招聘。",
+      "status": "已连通",
+      "checkedAt": "2026-08-25 17:38",
+      "signal": "山东人事考试信息网"
+    },
+    {
+      "title": "天津市人事考试网上报名公共服务平台",
+      "category": "天津",
+      "region": "天津",
+      "priority": "高",
+      "source": "天津人事考试",
+      "url": "http://rsks.hrss.tj.gov.cn/",
+      "note": "天津为必看地区，关注省考、事业单位、人才引进、国央企在津岗位。",
+      "status": "已连通",
+      "checkedAt": "2026-08-25 17:38",
+      "signal": "温馨提示"
+    },
+    {
+      "title": "江苏省人事考试网｜事业单位/省考/选调",
       "category": "江苏",
       "region": "江苏",
       "priority": "高",
