@@ -1,13 +1,13 @@
 {
   "name": "求职生活成长工作台",
   "short_name": "成长工作台",
-  "description": "规划研究生求职、生活状态与自我提升的移动端工作台",
-  "start_url": "./index.html",
+  "description": "2028 求职、生活运营与自我提升工作台",
+  "start_url": "./?v=stable-20260825",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
   "background_color": "#fff7fb",
-  "theme_color": "#d946ef",
+  "theme_color": "#f9d5e5",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "./icon.svg",
