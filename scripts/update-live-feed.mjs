@@ -65,19 +65,33 @@ function scoreItem(text, category, region) {
 
 async function tavilySearch(query) {
   if (!TAVILY_API_KEY) return [];
-  const res = await fetch('https://api.tavily.com/search', {
+  const payload = {
+    query: query.q,
+    search_depth: 'basic',
+    include_answer: false,
+    include_raw_content: false,
+    max_results: MAX_RESULTS_PER_QUERY
+  };
+  let res = await fetch('https://api.tavily.com/search', {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({
-      api_key: TAVILY_API_KEY,
-      query: query.q,
-      search_depth: 'basic',
-      include_answer: false,
-      include_raw_content: false,
-      max_results: MAX_RESULTS_PER_QUERY
-    })
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `Bearer ${TAVILY_API_KEY}`
+    },
+    body: JSON.stringify(payload)
   });
-  if (!res.ok) throw new Error(`Tavily ${res.status}`);
+  if (res.status === 401 || res.status === 403) {
+    // Compatibility fallback for older Tavily examples that pass api_key in body.
+    res = await fetch('https://api.tavily.com/search', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ api_key: TAVILY_API_KEY, ...payload })
+    });
+  }
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    throw new Error(`Tavily ${res.status}${detail ? ': ' + detail.slice(0, 120) : ''}`);
+  }
   const data = await res.json();
   return (data.results || []).map((r) => ({
     title: r.title || query.q,
