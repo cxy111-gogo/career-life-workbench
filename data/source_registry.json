@@ -1,0 +1,36 @@
+{
+  "updatedAt": "2026-10-07",
+  "strategy": "官方源优先，企业官网次之，聚合站只作线索；所有报名/投递以官方公告原文为准。",
+  "priorityRegions": {
+    "must": ["山东", "天津", "江苏", "浙江"],
+    "optional": ["河北", "山西", "陕西", "昆明", "安徽", "河南", "黑龙江", "辽宁"]
+  },
+  "officialExamSources": [
+    {"name":"中央机关及其直属机构考试录用公务员专题","category":"国考","region":"全国","url":"http://bm.scs.gov.cn/kl2026","query":"中央机关及其直属机构 考试录用公务员 公告 职位表 官方"},
+    {"name":"中国人事考试网","category":"考试总入口","region":"全国","url":"http://www.cpta.com.cn/","query":"中国人事考试网 公告 报名 官方"},
+    {"name":"山东人事考试信息网","category":"省考/事业编/教师","region":"山东","url":"http://hrss.shandong.gov.cn/rsks/","query":"山东 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"天津人事考试","category":"省考/事业编/教师","region":"天津","url":"http://rsks.hrss.tj.gov.cn/","query":"天津 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"江苏省人事考试网","category":"省考/事业编/教师","region":"江苏","url":"http://jshrss.jiangsu.gov.cn/col/col57268/","query":"江苏 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"浙江省人事考试院","category":"省考/事业编/教师","region":"浙江","url":"http://www.zjks.com/","query":"浙江 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"河北省人事考试网","category":"可看地区","region":"河北","url":"https://www.hebpta.com.cn/","query":"河北 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"山西省人社厅人事考试","category":"可看地区","region":"山西","url":"https://rst.shanxi.gov.cn/rsks/","query":"山西 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"陕西人事考试网","category":"可看地区","region":"陕西","url":"http://www.sxrsks.cn/","query":"陕西 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"安徽省人事考试网","category":"可看地区","region":"安徽","url":"http://www.apta.gov.cn/","query":"安徽 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"河南省人事考试中心","category":"可看地区","region":"河南","url":"http://www.hnrsks.com/","query":"河南 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"黑龙江省人事考试网","category":"可看地区","region":"黑龙江","url":"http://www.hljrsks.org.cn/","query":"黑龙江 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"辽宁人事考试网","category":"可看地区","region":"辽宁","url":"https://www.lnrsks.com/","query":"辽宁 省考 事业单位 选调 教师招聘 人才引进 官方"},
+    {"name":"昆明市人社局/人事考试","category":"可看地区","region":"昆明","url":"https://rsj.km.gov.cn/","query":"昆明 事业单位 教师招聘 人才引进 官方"}
+  ],
+  "teacherSources": [
+    {"name":"高校人才网","category":"教师/人才引进","region":"全国","url":"https://www.gaoxiaojob.com/","query":"中职教师 高职院校 职业技术学院 招聘 工商管理 市场营销 官方"},
+    {"name":"各地教育局官网","category":"中专/大专教师","region":"重点地区","url":"","query":"山东 天津 江苏 浙江 中等职业学校 职业技术学院 教师招聘 公告 官方"}
+  ],
+  "enterpriseSources": [
+    {"name":"国务院国资委央企名录","category":"央企名录基准","region":"全国","url":"http://wap.sasac.gov.cn/n2588045/n27271785/n27271792/c14159097/content.html","query":"国务院国资委 央企名录 官方"},
+    {"name":"国聘","category":"央国企聚合","region":"全国","url":"https://www.iguopin.com/","query":"央企 国企 校园招聘 管培 综合管理 市场营销 官方"},
+    {"name":"银行招聘聚合入口","category":"银行","region":"全国","url":"https://campus.chinahr.com/","query":"银行 校园招聘 管培 营销服务 综合运营 官方"},
+    {"name":"牛客校招","category":"互联网大厂","region":"全国","url":"https://www.nowcoder.com/jobs/school","query":"2028届 互联网 校园招聘 产品 运营 市场 官方"}
+  ],
+  "priorityCentralSOEs": ["中国移动通信集团有限公司", "中国电信集团有限公司", "中国联合网络通信集团有限公司", "国家电网有限公司", "中国南方电网有限责任公司", "中国邮政集团有限公司", "中国烟草总公司", "中粮集团有限公司", "华润（集团）有限公司", "招商局集团有限公司", "中国旅游集团有限公司", "中国商用飞机有限责任公司", "中国中车集团有限公司", "中国建筑集团有限公司", "中国交通建设集团有限公司", "中国铁路工程集团有限公司", "中国铁道建筑集团有限公司", "中国医药集团有限公司", "中国保利集团有限公司", "国家开发投资集团有限公司", "中国诚通控股集团有限公司", "中国国新控股有限责任公司"],
+  "centralSOEUniverseNote": "央企完整名单以国务院国资委央企名录为准；脚本按名单分批搜索企业官网/招聘入口，页面优先展示与你匹配度较高的企业。"
+}
