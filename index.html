@@ -376,11 +376,43 @@
         try { return JSON.parse(localStorage.getItem(TODO_KEY) || '[]'); } catch (e) { return []; }
       }
       function writeTodos(todos) { localStorage.setItem(TODO_KEY, JSON.stringify(todos)); }
-      function dayIndex(len) {
+      function todayKey() {
+        var d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+      }
+      function dayIndex(len, salt) {
         if (!len) return 0;
         var start = new Date(new Date().getFullYear(), 0, 0);
         var diff = new Date() - start;
-        return Math.floor(diff / 86400000) % len;
+        var base = Math.floor(diff / 86400000);
+        var offset = String(salt || '').split('').reduce(function (n, ch) { return n + ch.charCodeAt(0); }, 0);
+        return (base + offset) % len;
+      }
+      function pickDailyUnique(list, storeKey, salt, windowSize) {
+        if (!list || !list.length) return null;
+        var today = todayKey();
+        var state;
+        try { state = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch (e) { state = {}; }
+        if (state.date === today && typeof state.index === 'number' && list[state.index]) return list[state.index];
+        var recent = Array.isArray(state.recent) ? state.recent : [];
+        var idx = dayIndex(list.length, salt);
+        var guard = 0;
+        while (recent.indexOf(idx) >= 0 && guard < list.length) { idx = (idx + 1) % list.length; guard += 1; }
+        var maxRecent = Math.min(windowSize || 7, Math.max(1, list.length - 1));
+        recent.push(idx);
+        recent = recent.slice(-maxRecent);
+        localStorage.setItem(storeKey, JSON.stringify({ date: today, index: idx, recent: recent }));
+        return list[idx];
+      }
+      function itemTimeValue(item) {
+        var text = item && item.checkedAt ? String(item.checkedAt).replace(' ', 'T').replace(/-/g, '/') : '';
+        var t = text ? Date.parse(text) : 0;
+        return isNaN(t) ? 0 : t;
+      }
+      function isTodayText(text) {
+        if (!text) return false;
+        var key = todayKey();
+        return String(text).slice(0, 10) === key;
       }
       function escapeHtml(text) {
         return String(text || '').replace(/[&<>"]/g, function (ch) {
@@ -411,17 +443,17 @@
       }
       function loadDailyPrompts() {
         fetch('./data/life_prompts.json?v=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (data) {
-          var item = (data.daily || [])[dayIndex((data.daily || []).length)];
+          var item = pickDailyUnique(data.daily || [], 'careerLifeWorkbench.dailyLifePrompt.v2', 'life', 7);
           if (!item) return;
-          if ($('lifeTitle')) $('lifeTitle').textContent = item.title;
+          if ($('lifeTitle')) $('lifeTitle').textContent = item.title + '｜' + todayKey();
           if ($('lifeType')) $('lifeType').textContent = item.type;
           if ($('lifeReminder')) $('lifeReminder').textContent = item.reminder;
           if ($('todayMinimum')) $('todayMinimum').textContent = item.reminder + ' 再检查一个高优先级求职信息源。';
         }).catch(function () {});
         fetch('./data/relationship_prompts.json?v=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (data) {
-          var item = (data.items || [])[dayIndex((data.items || []).length)];
+          var item = pickDailyUnique(data.items || [], 'careerLifeWorkbench.dailyRelationPrompt.v2', 'relationship', 7);
           if (!item) return;
-          if ($('relationTitle')) $('relationTitle').textContent = item.title;
+          if ($('relationTitle')) $('relationTitle').textContent = item.title + '｜' + todayKey();
           if ($('relationMindset')) $('relationMindset').textContent = item.mindset;
           if ($('relationPractice')) $('relationPractice').textContent = item.practice;
           if ($('relationStop')) $('relationStop').textContent = item.stopLine;
@@ -460,10 +492,11 @@
           var fit = item.fit ? '<span class="tag hot">匹配度 ' + escapeHtml(item.fit) + '%</span>' : '';
           var why = item.why ? '<div class="item-note"><strong>为什么适合你：</strong>' + escapeHtml(item.why) + '</div>' : '';
           var checked = item.checkedAt ? '<span class="tag">' + escapeHtml(item.checkedAt) + '</span>' : '';
+          var fresh = isTodayText(item.checkedAt) ? '<span class="tag hot">今日更新</span>' : '';
           var tier = item.sourceTier || '待核验来源';
           var tierClass = tier.indexOf('官方') >= 0 ? 'official' : (tier.indexOf('企业') >= 0 ? 'enterprise' : (tier.indexOf('聚合') >= 0 ? 'aggregate' : ''));
           var action = item.action ? '<div class="item-note"><strong>下一步：</strong>' + escapeHtml(item.action) + '</div>' : '';
-          return '<article class="item feed-item"><div class="feed-title">' + escapeHtml(item.title) + '</div><div class="item-meta">' + fit + '<span class="tag hot">' + escapeHtml(item.priority) + '</span><span class="tag source-tier ' + tierClass + '">' + escapeHtml(tier) + '</span><span class="tag">' + escapeHtml(item.category) + '</span><span class="tag good">' + escapeHtml(item.status) + '</span><span class="tag">' + escapeHtml(item.region) + '</span>' + checked + '</div>' + why + '<div class="item-note">' + escapeHtml(item.note) + '</div>' + action + '<a class="feed-url" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener">' + escapeHtml(item.source) + '：' + escapeHtml(item.url) + '</a></article>';
+          return '<article class="item feed-item"><div class="feed-title">' + escapeHtml(item.title) + '</div><div class="item-meta">' + fresh + fit + '<span class="tag hot">' + escapeHtml(item.priority) + '</span><span class="tag source-tier ' + tierClass + '">' + escapeHtml(tier) + '</span><span class="tag">' + escapeHtml(item.category) + '</span><span class="tag good">' + escapeHtml(item.status) + '</span><span class="tag">' + escapeHtml(item.region) + '</span>' + checked + '</div>' + why + '<div class="item-note">' + escapeHtml(item.note) + '</div>' + action + '<a class="feed-url" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener">' + escapeHtml(item.source) + '：' + escapeHtml(item.url) + '</a></article>';
         }).join('');
       }
       function startFeedScroll() {
@@ -479,7 +512,12 @@
         shell.addEventListener('mouseleave', startFeedScroll);
       }
       function applyFeed(data, label) {
-        feedState.items = (data && data.items && data.items.length) ? data.items : defaultFeed.slice();
+        feedState.items = (data && data.items && data.items.length) ? data.items.slice() : defaultFeed.slice();
+        feedState.items.sort(function (a, b) {
+          var timeDiff = itemTimeValue(b) - itemTimeValue(a);
+          if (timeDiff) return timeDiff;
+          return Number(b.fit || 0) - Number(a.fit || 0);
+        });
         if (feedState.items.filter(function (x) { return x.category === feedState.filter; }).length === 0) feedState.filter = '全部';
         var updated = $('feedUpdated');
         if (updated) updated.textContent = label || ('后台更新于 ' + ((data && data.updatedAt) || '内置数据'));
